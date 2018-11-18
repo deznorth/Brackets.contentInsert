@@ -1,0 +1,18 @@
+{
+    "name":"dez.contentInsert",
+    "title":"Content Insert",
+    "description":"Inserts content provided in a txt file into predefined placeholders.",
+    "version":"0.0.1",
+    "author":"David Rojas <contact@davidr.info> (https://davidr.info)",
+    "license": "MIT",
+    "engines": {
+        "brackets": ">=0.24.0"
+    },
+    "keywords": [
+        "content",
+        "insert",
+        "placeholder",
+        "fill",
+        "replace"
+    ]
+}
