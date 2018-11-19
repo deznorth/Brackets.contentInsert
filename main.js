@@ -7,13 +7,57 @@ define(function (require, exports, module) {
     "use strict";
 
     var CommandManager = brackets.getModule("command/CommandManager"),
-        EditorManager  = brackets.getModule("editor/EditorManager"),
-        Menus          = brackets.getModule("command/Menus");
+        DocumentManager  = brackets.getModule("document/DocumentManager"),
+        Menus          = brackets.getModule("command/Menus"),
+        ProjectManager = brackets.getModule("project/ProjectManager"),
+        FileSystem     = brackets.getModule("filesystem/FileSystem"),
+        FileUtils      = brackets.getModule("file/FileUtils");
 
+    var pattern = /\{\{::\w*?\}\}/i;
+
+    /* Returns the path to the requested file 
+     * May return undefined */
+    function getPathByFileName(fileName){
+        var projectFiles = ProjectManager.getProjectRoot()._contents;
+        for(var i = 0; i<projectFiles.length; i++){
+            if(projectFiles[i]._name == fileName){
+                return projectFiles[i]._path;
+            }
+        }
+        console.log(`contentInsert: could not locate a file named ${fileName}`);
+        alert(`contentInsert: You need to create a configuration file named ${fileName}`);
+        return null;
+    }
+
+    function cleanupConfig(config){
+        config = config.replace(/\n/g, "")
+        .replace(/\r/g, "")
+        .replace(/\t/g, "")
+        .replace(/\f/g, "")
+        .replace(/\s+/g,"")
+        .replace(/,(?=\})/g,"");
+        return config;
+    }
+
+    function loadConfig(){
+        var path = getPathByFileName('contentInsert.json');
+        if(path != null){
+            var doc = DocumentManager.getDocumentForPath(path);
+            doc.done(function(document){
+                console.log(JSON.parse(cleanupConfig(document.getText())));
+            }).fail(function(err){
+                console.log(err);
+            });
+        }
+    }
+
+    function checkFormat(){
+
+    }
     
     // Function to run when the menu item is clicked
     function handleContentInsert() {
-        alert('contentInsert');
+        loadConfig();
     }
     
     
